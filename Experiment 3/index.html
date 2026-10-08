@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>My To-Do List</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    />
+
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
+
+    <style>
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        background-color: #e8f5f3;
+      }
+
+      header h2 {
+        text-align: center;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+      }
+
+      #taskInput:focus {
+        border: 2px solid teal;
+        box-shadow: none;
+      }
+
+      .list-group-item {
+        margin-bottom: 8px;
+        border-radius: 8px;
+        padding: 12px 16px;
+        transition: background-color 0.3s;
+      }
+
+      .list-group-item:hover {
+        background-color: #f1f1f1;
+      }
+
+      .task-text {
+        cursor: pointer;
+        flex-grow: 1;
+        font-size: 18px;
+      }
+
+      .completed {
+        text-decoration: line-through;
+        color: gray;
+        font-style: italic;
+      }
+
+      .btn {
+        font-weight: bold;
+      }
+
+      #counter {
+        text-align: center;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body class="w3-light-grey">
+    <div class="container py-5" style="max-width: 600px">
+      <div class="w3-card-4 w3-white">
+        <header class="w3-container w3-teal py-3">
+          <h2 class="m-0">My To-Do List</h2>
+        </header>
+
+        <div class="w3-container py-4">
+          <div class="input-group mb-3">
+            <input
+              type="text"
+              id="taskInput"
+              class="form-control"
+              placeholder="Enter a new task..."
+            />
+            <button id="addBtn" class="btn btn-success">Add</button>
+          </div>
+
+          <div id="errorMsg" class="alert alert-danger py-2 d-none">
+            Please type a task first!
+          </div>
+
+          <ul id="taskList" class="list-group mb-3"></ul>
+
+          <p id="counter" class="text-muted mb-0"></p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const taskInput = document.getElementById("taskInput");
+      const addBtn = document.getElementById("addBtn");
+      const taskList = document.getElementById("taskList");
+      const errorMsg = document.getElementById("errorMsg");
+      const counter = document.getElementById("counter");
+
+      function addTask() {
+        const text = taskInput.value.trim(); // remove extra spaces
+
+        if (text === "") {
+          errorMsg.classList.remove("d-none");
+          return;
+        }
+        errorMsg.classList.add("d-none");
+
+        const li = document.createElement("li");
+        li.className = "list-group-item d-flex align-items-center";
+
+        const span = document.createElement("span");
+        span.className = "task-text";
+        span.textContent = text;
+        span.addEventListener("click", function () {
+          span.classList.toggle("completed");
+          updateCounter();
+        });
+
+        const delBtn = document.createElement("button");
+        delBtn.className = "btn btn-sm btn-danger ms-2";
+        delBtn.textContent = "Delete";
+        delBtn.addEventListener("click", function () {
+          li.remove();
+          updateCounter();
+        });
+
+        li.appendChild(span);
+        li.appendChild(delBtn);
+        taskList.appendChild(li);
+
+        taskInput.value = "";
+        taskInput.focus();
+        updateCounter();
+      }
+
+      function updateCounter() {
+        const total = taskList.children.length;
+        const done = taskList.querySelectorAll(".completed").length;
+        counter.textContent =
+          total === 0
+            ? "No tasks yet. Add one above!"
+            : done + " of " + total + " tasks completed";
+      }
+
+      addBtn.addEventListener("click", addTask);
+      taskInput.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") addTask(); // Enter key also adds
+      });
+
+      updateCounter();
+    </script>
+  </body>
+</html>
